@@ -11,11 +11,15 @@ const Navbar = ({ socket }) => {
   
     useEffect(() => {
       socket.on("getNotification", (data) => {
+        console.log("getNoticaasdfas; ", data)
         setNotifications((prev) => [...prev, data]);
       });
     }, [socket]);
   
     const displayNotification = ({ senderName, type }) => {
+
+      console.log("This is display notification function : ", senderName, type)
+
       let action;
   
       if (type === 1) {
@@ -23,7 +27,7 @@ const Navbar = ({ socket }) => {
       } else if (type === 2) {
         action = "commented";
       } else {
-        action = "shared";
+        action = "shareded";
       }
       return (
         <span className="notification">{`${senderName} ${action} your post.`}</span>
