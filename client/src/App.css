@@ -6,13 +6,13 @@ body {
 }
 
 .container {
-  width: 50vh;
+  width: 60vh;
   border-radius: 5px;
   border: 0.5px solid lightseagreen;
 }
 
 .login {
-  height: 50vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,9 +20,11 @@ body {
 }
 
 input {
-  width: 50%;
+  border-color: lightseagreen;
+  width: 55%;
   padding: 10px;
   margin-bottom: 20px;
+  border-radius: 0.5em;
 }
 
 button {
@@ -49,4 +51,35 @@ h2{
   color: white;
   padding: 3px 5px;
   border-radius: 5px;
+}
+
+.cards-container{
+  background-color: white;
+  overflow-y: scroll;
+  max-height: 35em;
+}
+
+.chat-container{
+  margin-left: 20em;
+  background-color: black;
+  overflow-y: scroll;
+  max-height: 35em;
+}
+
+.add-container{
+  align-items: center;
+  background-color: lightseagreen;
+  height: 2em;
+}
+
+.addImg{
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  padding-top: 0.5em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
 }

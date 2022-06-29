@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 const Navbar = ({ socket }) => {
 
+  
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
   
@@ -17,8 +18,6 @@ const Navbar = ({ socket }) => {
     }, [socket]);
   
     const displayNotification = ({ senderName, type }) => {
-
-      console.log("This is display notification function : ", senderName, type)
 
       let action;
   

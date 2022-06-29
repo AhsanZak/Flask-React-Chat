@@ -1,10 +1,11 @@
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 from flask import Flask, render_template, url_for, copy_current_request_context, jsonify, request
 from random import random
 from time import sleep
 from threading import Thread, Event
 from flask_cors import CORS, cross_origin
 import json
+from dbconnect import insert
 
 __author__ = 'slynn'
 
@@ -29,6 +30,40 @@ def index():
     return render_template('index.html')
 
 
+@socketio.on('addPost')
+def add_post(data):
+    username = data["senderName"]
+    postUrl = data["postUrl"]
+    userImg = "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+    # sql = f"INSERT INTO POSTS(username,fullname, userImg, postImg) VALUES({username},{username},{userImg},{postUrl})"
+    # result = insert(sql)
+    # Opening JSON file
+    new_dict = {}
+    new_dict["id"] = 1
+    new_dict["username"] = username
+    new_dict["fullname"] = "Test" + username
+    new_dict["userImg"] = userImg
+    new_dict["postImg"] = postUrl
+
+    f_path = r'C:\Users\ahsan\OneDrive\Desktop\New folder\flask-react-chat\client\src\datas.json'
+    
+    with open(f_path, "r") as readfile:
+        data = json.load(readfile)
+
+    data.append(new_dict)
+
+    json_object = json.dumps(data)
+
+    with open(f_path, "w") as outfile:
+        outfile.write(json_object)
+
+    print("This is loaded json data ; ", data)
+
+
+@socketio.on('message')
+def handleMessage(msg):
+    print('Message: ', + msg)
+    send(msg, broadcast=True)
 
 
 @socketio.on('connect')
@@ -42,7 +77,7 @@ def add_new_user(username):
     print("Adding new user ------------------------------- ", username, currentSocketId)
     if username not in online_user:
         online_user[currentSocketId] = username
-
+    
     print("0-0-0-0-0-0-0-0-0-0-0-0-0-0-00- ", online_user)
 
 
@@ -73,20 +108,6 @@ def test_connect(data):
     result_dict = {"senderName": senderName, "type": type_of_notification}
 
     emit("getNotification", (result_dict), room=client_id)
-
-    # need visibility of the global thread object
-
-
-# @socketio.on('sendText')
-# def sent_text(data):
-#     print("THisi isdfasdfasdfasdfasd;: ", data)
-#     senderName = data["senderName"]
-#     receiverName = data["receiverName"]
-#     text = data["text"]
-
-#     print("these are the notification details  --------------------- : ", senderName, receiverName, text)
-
-#     emit("getText", (senderName, receiverName, text), broadcast=True)
 
 
 @socketio.on('getNotification')
