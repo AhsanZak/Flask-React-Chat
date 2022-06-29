@@ -12,6 +12,8 @@ function PostModal({setOpenModal, socket, user}){
             senderName: user,
             postUrl: postUrl
           });
+
+          setOpenModal(false);
     }
 
     return(

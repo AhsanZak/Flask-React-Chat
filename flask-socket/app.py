@@ -62,7 +62,9 @@ def add_post(data):
 
 @socketio.on('message')
 def handleMessage(msg):
-    print('Message: ', + msg)
+    currentSocketId = request.sid
+    get_user_name(currentSocketId)
+    print('Message--------: ', msg)
     send(msg, broadcast=True)
 
 
@@ -79,6 +81,18 @@ def add_new_user(username):
         online_user[currentSocketId] = username
     
     print("0-0-0-0-0-0-0-0-0-0-0-0-0-0-00- ", online_user)
+
+
+def get_user_name(socket_id):
+    
+    # list out keys and values separately
+    key_list = list(online_user.keys())
+    val_list = list(online_user.values())
+    
+    position = key_list.index(socket_id)
+    print("---------------------------------------------------------------------------------", position)
+    return key_list[position]
+
 
 
 def get_reciever_id(reciever_name):

@@ -2,13 +2,16 @@ import "./navbar.css";
 import Notification from "../../img/notification-icon.svg";
 import Message from "../../img/message.svg";
 import chat from "../../img/chat2.svg";
+import ChatModal from "../modal/chat-modal.js"
 import { useEffect, useState } from "react";
 
-const Navbar = ({ socket }) => {
+const Navbar = ({ socket, user }) => {
 
   
     const [notifications, setNotifications] = useState([]);
     const [open, setOpen] = useState(false);
+    const [chatModal, setChatModal] = useState(false)
+    
   
     useEffect(() => {
       socket.on("getNotification", (data) => {
@@ -40,6 +43,9 @@ const Navbar = ({ socket }) => {
   
     return (
       <div className="navbar">
+        
+      {chatModal && <ChatModal setOpenModal={setChatModal} socket={socket} user={user}/>}
+
         <span className="logo">App</span>
         <div className="icons">
           <div className="icon" onClick={() => setOpen(!open)}>
@@ -52,7 +58,7 @@ const Navbar = ({ socket }) => {
           <div className="icon" onClick={() => setOpen(!open)}>
             <img src={Message} className="iconImg" alt="" />
           </div>
-          <div className="icon" onClick={() => setOpen(!open)}>
+          <div className="icon" onClick={() => setChatModal(true)}>
             <img src={chat} className="iconImg" alt="" />
           </div>
         </div>

@@ -7,13 +7,13 @@ import post from "./datas.json";
 import { io } from "socket.io-client";
 import Add from "./img/add_icon.svg";
 import Modal from "./components/modal/add-post-modal.js"
+import { Container, Row, Col } from 'react-bootstrap';
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState("");
   const [socket, setSocket] = useState(null);
   const [addModal, setAddModal] = useState(false);
-  const [posts, setPosts] = useState([])
 
   console.log("These are the posts : ", post);
 
@@ -26,11 +26,13 @@ const App = () => {
   }, [socket, user]);
   
   return (
-    <div className="container">
+    <Container>
+      <Row>
+        <Col>
       {addModal && <Modal setOpenModal={setAddModal} socket={socket} user={user}/>}
       {user ? (
         <>
-          <Navbar socket={socket} />
+          <Navbar socket={socket} user={user}/>
           <div className="cards-container">
             {post.map((post) => (
               <Cards key={post.id} post={post} socket={socket} user={user}/>
@@ -54,8 +56,9 @@ const App = () => {
           <button onClick={() => setUser(username)}>Login</button>
         </div>
       )}
-      
-    </div>
+      </Col>
+      </Row>
+      </Container>
     
 
   );
