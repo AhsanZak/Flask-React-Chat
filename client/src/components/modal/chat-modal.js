@@ -20,8 +20,8 @@ function ChatModal({setOpenModal, socket, user}){
     useEffect(() => {
         socket.on("message", (data) => {
             console.log("this is messafe data ", data);
-          setMessage(data);
-            $("#messages").append('<p><span id="p-username">'+''+'</span>'+data+'</p>')
+          setMessage(data.message);
+            $("#messages").append('<p><span id="p-username">'+data.username+' : '+'</span>'+data.message+'</p>')
         });
       }, [socket]);
 

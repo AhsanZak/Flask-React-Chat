@@ -1,4 +1,4 @@
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask import Flask, render_template, url_for, copy_current_request_context, jsonify, request
 from random import random
 from time import sleep
@@ -57,42 +57,27 @@ def add_post(data):
     with open(f_path, "w") as outfile:
         outfile.write(json_object)
 
-    print("This is loaded json data ; ", data)
 
 
 @socketio.on('message')
 def handleMessage(msg):
     currentSocketId = request.sid
-    get_user_name(currentSocketId)
-    print('Message--------: ', msg)
-    send(msg, broadcast=True)
+    username = online_user[currentSocketId]
+    send({"message":msg, "username":username}, broadcast=True)
 
 
 @socketio.on('connect')
 def test_connect(data):
-    print("someone has connected ----------------------------- ")
+    print("someone has connected ----------------------------- ", data)
 
 
 @socketio.on('newUser')
 def add_new_user(username):
     currentSocketId = request.sid
-    print("Adding new user ------------------------------- ", username, currentSocketId)
     if username not in online_user:
         online_user[currentSocketId] = username
-    
-    print("0-0-0-0-0-0-0-0-0-0-0-0-0-0-00- ", online_user)
-
-
-def get_user_name(socket_id):
-    
-    # list out keys and values separately
-    key_list = list(online_user.keys())
-    val_list = list(online_user.values())
-    
-    position = key_list.index(socket_id)
-    print("---------------------------------------------------------------------------------", position)
-    return key_list[position]
-
+    join_room("room"+username)
+    print("THis is new user : ", username, online_user)
 
 
 def get_reciever_id(reciever_name):
@@ -102,6 +87,21 @@ def get_reciever_id(reciever_name):
     val_list = list(online_user.values())
     
     position = val_list.index(reciever_name)
+  
+    
+    # finding duplicate values
+    # from dictionary using flip
+    # flipped = {}
+    
+    # for key, value in online_user.items():
+    #     if value not in flipped:
+    #         flipped[value] = [key]
+    #     else:
+    #         flipped[value].append(key)
+    
+    # # printing result
+    # print("final_dictionary", str(flipped))
+
     return key_list[position]
 
 
@@ -117,11 +117,11 @@ def test_connect(data):
 
     client_id = get_reciever_id(receiverName)
     
-    print("These are the sende Notification details : =----------------------- ", client_id, senderName, receiverName, type_of_notification)
+    print("These are the sende Notification details : =----------------------- ", online_user)
 
     result_dict = {"senderName": senderName, "type": type_of_notification}
 
-    emit("getNotification", (result_dict), room=client_id)
+    emit("getNotification", (result_dict), room="room"+receiverName)
 
 
 @socketio.on('getNotification')
